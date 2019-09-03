@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html { scroll-behavior: smooth; } 
+
+        #modal-backdrop {
+            background-color: rgba(0,0,0,0.6);
+            bottom: 0;
+            display: none;
+            left: 0;
+            overflow: auto;
+            padding-top: 100px;
+            position: fixed;
+            right: 0;
+            top: 0;
+        }
+
+        #modal-content {
+            background-color: #fff;
+            height: 200px;
+            margin: 0 auto;
+            width: 60%;
+        }
+
+        #close-modal { float: right;}
+
+        html.no-scroll {
+            overflow-y: scroll;
+            position: fixed;
+            width: 100%;
+        }
+
+        .whitespace {
+            align-items: center;
+            display: flex;
+            height: 50vh;
+            justify-content: center;
+        }
+
+        .light-blue { background-color: #448ef6; }
+
+        .medium-blue  { background-color: #005792; }
+
+        .dark-blue  { background-color: #00204a; }
+    </style>
+    <title>Disable scroll while modal is open - Fixed scrollbar</title>
+</head>
+<body>
+    <div id="modal-backdrop">
+        <div id="modal-content">
+            <button id="close-modal">X</button>
+        </div>
+    </div>
+    <div class="whitespace light-blue">
+        <button class="btn-modal">Click Me</button>
+    </div>
+    <div class="whitespace medium-blue">
+    <button class="btn-modal">Click Me</button>
+    </div>
+    <div class="whitespace dark-blue">
+        <button class="btn-modal">Click Me</button>
+    </div>
+    <script>
+        function closeModal() {
+            let scrollPosition = window.getComputedStyle(html);
+            modalBackdrop.style.display = 'none';
+            html.classList.remove('no-scroll');
+            html.style.scrollBehavior = 'auto';
+            html.scrollTop = -parseInt(scrollPosition.getPropertyValue('top'));
+            html.style.scrollBehavior = 'smooth';
+        }
+
+        let html = document.querySelector('html');
+        let modalBackdrop = document.getElementById('modal-backdrop');
+        let btnOpenModal = document.querySelectorAll('.btn-modal');
+        let btnCloseModal = document.getElementById('close-modal');
+
+        btnOpenModal.forEach((e) => {
+            e.addEventListener('click', () => {
+                let htmlScrollPosition = html.scrollTop;
+                modalBackdrop.style.display = 'block';
+                html.style.top = '-' + htmlScrollPosition + 'px';
+                html.classList.add('no-scroll');
+            });
+        });
+
+        btnCloseModal.addEventListener('click', () => closeModal());
+
+        window.addEventListener('click', (e) => (e.target == modalBackdrop) ? closeModal() : false);
+    </script>
+</body>
+</html>
+
